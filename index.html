@@ -71,14 +71,14 @@ width:95vw;
 </div>
 
 <div id="buttons"><button onmouseup="continuousstatic()">Start Test</button></div>
-<div id="rtping"><span style="color:rgb(249,255,0)">116ms</span></div>
+<div id="rtping"></div>
 <div id="results"></div>
 <canvas id="myCanvas" width="600" height="197" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.</canvas>
 
 <ul id=""></ul>
-<div id="afterresults1"><span style="color:rgb(214,255,0)">min:73ms</span> <br><span style="color:rgb(255,239,0)">max:146ms</span></div>
-<div id="afterresults2"><span style="color:rgb(229,255,0)">avg: 90ms</span></div>
+<div id="afterresults1"></div>
+<div id="afterresults2"></div>
 
 <script type="text/javascript">
 
@@ -98,14 +98,12 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 	var paused = false;
 	var resultList = [];
 	let resultListColors = [];
+	var s80worker = new Worker('s80worker.js');
 	var colormap = new Array (1501);
 	for(x=1;x<1500;x++)
 	{
 		colormap[x] = numberToColorHsl(Math.round((100-((Math.log(x)/6)*100)))+30);
 	}
-
-
-
 
 
 		let myChart = new Chart(document.getElementById("mychart"), {
