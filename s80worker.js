@@ -42,10 +42,37 @@ function XHConn()
   };
   return this;
 }
+let xhr = new XHConn();
+let url;
+let startTime
+function measureResponse(){ //nested function
+
+    postMessage(Math.round(performance.now()) - startTime);
+}
+
+
+self.onmessage = function(event) {
+//start
+ //runs when this worker is called by index.html
+  
+    url = "nocache=" + Math.random() ;
+    startTime = Math.round(performance.now())
+
+xhr.connect("reqspeed.jpg", "GET", url, measureResponse);
+
+
+}
 
 
 
 
-//start here
+/*starttime = Math.round(window.performance.now());
+timesample = Math.round(window.performance.now()) - starttime;
 
-var xhr = new XHConn();
+
+
+
+starttime = Math.round(window.performance.now());
+xhr.connect("reqspeed.jpg", "GET", url, aftercontinuousstatic);
+
+*/

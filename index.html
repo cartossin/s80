@@ -73,9 +73,6 @@ width:95vw;
 <div id="buttons"><button onmouseup="continuousstatic()">Start Test</button></div>
 <div id="rtping"></div>
 <div id="results"></div>
-<canvas id="myCanvas" width="600" height="197" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
 <ul id=""></ul>
 <div id="afterresults1"></div>
 <div id="afterresults2"></div>
@@ -88,17 +85,18 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 	var string1 = "";
 	var min = 50000;
 	var max = 0;
-	var xhr = new XHConn();
+	//var xhr = new XHConn();
 	var results1;
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.font = "10px Arial";
+	//var c = document.getElementById("myCanvas");
+	//var ctx = c.getContext("2d");
+//	ctx.font = "10px Arial";
 	var textX = 0;
 	var textY = 10;
 	var paused = false;
 	var resultList = [];
 	let resultListColors = [];
 	var s80worker = new Worker('s80worker.js');
+	s80worker.onmessage = aftercontinuousstatic;
 	var colormap = new Array (1501);
 	for(x=1;x<1500;x++)
 	{
@@ -131,7 +129,7 @@ Your browser does not support the HTML5 canvas tag.</canvas>
                     x: {
 						type: 'linear',
 						min: 0,
-						max: 7000,
+						//max: 7000,
 						grid: {
 							display: false
 						},
@@ -146,17 +144,12 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 						grid:{
 							color: 'rgb(100,100,100)'
 						},
-						type:'linear'
+						type:'logarithmic'
 					}
                 }
             }
         });
 	
-
-
-
-
-
 
 function colorof(num)
 {
@@ -210,71 +203,30 @@ function numberToColorHsl(i) {
 /** XHConn - Simple XMLHTTP Interface - bfults@gmail.com - 2005-04-08        **
  ** Code licensed under Creative Commons Attribution-ShareAlike License      **
  ** http://creativecommons.org/licenses/by-sa/2.0/                           **/
-function XHConn()
-{
-  var xmlhttp, bComplete = false;
-  try { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); }
-  catch (e) { try { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
-  catch (e) { try { xmlhttp = new XMLHttpRequest(); }
-  catch (e) { xmlhttp = false; }}}
-  if (!xmlhttp) return null;
-  this.connect = function(sURL, sMethod, sVars, fnDone)
-  {
-    if (!xmlhttp) return false;
-    bComplete = false;
-    sMethod = sMethod.toUpperCase();
 
-    try {
-      if (sMethod == "GET")
-      {
-        xmlhttp.open(sMethod, sURL+"?"+sVars, true);
-        sVars = "";
-      }
-      else
-      {
-        xmlhttp.open(sMethod, sURL, true);
-        xmlhttp.setRequestHeader("Method", "POST "+sURL+" HTTP/1.1");
-        xmlhttp.setRequestHeader("Content-Type",
-          "application/x-www-form-urlencoded");
-      }
-      xmlhttp.onreadystatechange = function(){
-        if (xmlhttp.readyState == 4 && !bComplete)
-        {
-          bComplete = true;
-          fnDone(xmlhttp);
-        }};
-      xmlhttp.send(sVars);
-    }
-    catch(z) { return false; }
-    return true;
-  };
-  return this;
-}
-
-	function pausetest()
-	{
+	function pausetest(){
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="continuousstatic()">Start Test</button>';
 		paused = true;
-
 	}
 
-	function continuousstatic()
-	{
+	function continuousstatic(){
 		paused = false;
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
-		var url = "nocache=" + Math.random() ;
-
-		starttime = Math.round(window.performance.now());
-		xhr.connect("reqspeed.jpg", "GET", url, aftercontinuousstatic);
+		s80worker.postMessage(null);
+		setInterval(keepChartUpdated,100);
 	}
 
-
+	function keepChartUpdated(){
+		if(!paused)
+			myChart.update();
+	}
 	
-	function aftercontinuousstatic(oXML)
+	function aftercontinuousstatic(workerResponse)
 	{
-		timesample = Math.round(window.performance.now()) - starttime;
+		let timesample = workerResponse.data;
+
 		var afterresults1 = document.getElementById("afterresults1");
 		var afterresults2 = document.getElementById("afterresults2");
 		var realtime1 = document.getElementById("rtping");
@@ -290,7 +242,7 @@ function XHConn()
 			afterresults1.innerHTML = "<span style='color:" + colorof(min) +"'>min:"+min+"ms</span> <br><span style='color:" + colorof(max) +"'>"+"max:"+max+"ms</span>";
 		}
 
-		if(counter1 >= 7176 || paused == true)
+		if(counter1 >= 1000 || paused == true)
 		{
 	
 			return 1;
@@ -299,12 +251,11 @@ function XHConn()
 
 		resultListColors[counter1] = colorof(timesample);
 
-		myChart.update();
 		counter1 += 1;
 		total1 += timesample;
 		avgpingtime = Math.round(total1/counter1);
 
-		var temp = oXML.responseText;
+	/*	var temp = oXML.responseText;
 		temp += "";
 		if(temp == "1")
 		{
@@ -327,10 +278,8 @@ function XHConn()
 			string1 += ". ";
 			realtime1.innerHTML = "timeout";
 		}
-		var url = "nocache=" + Math.random() ;
-
-		starttime = Math.round(window.performance.now());
-		xhr.connect("reqspeed.jpg", "GET", url, aftercontinuousstatic);
+	*/
+	s80worker.postMessage(null);
 	}
 
 //let resultListColors = [];
