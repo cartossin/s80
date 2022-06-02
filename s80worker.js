@@ -42,36 +42,35 @@ function XHConn()
   };
   return this;
 }
+
+function measureResponse(myXHR){
+    if(myXHR.status == 200){
+        postMessage(Math.ceil(performance.now() - startTime));
+    }
+    else
+    {
+        console.log("error; response code:")
+        console.log(myXHR.status);
+        setTimeout(onmessage,1000); //retry in a second
+    }
+}
+//must be delcared outside of onmessage for performance
 let xhr = new XHConn();
 let url;
-let startTime
-function measureResponse(){ //nested function
+let startTime;
 
-    postMessage(Math.round(performance.now()) - startTime);
-}
-
-
-self.onmessage = function(event) {
+onmessage = function(event) {
 //start
  //runs when this worker is called by index.html
   
     url = "nocache=" + Math.random() ;
-    startTime = Math.round(performance.now())
+    startTime = performance.now();
 
 xhr.connect("reqspeed.jpg", "GET", url, measureResponse);
 
 
 }
-
-
-
-
-/*starttime = Math.round(window.performance.now());
-timesample = Math.round(window.performance.now()) - starttime;
-
-
-
-
+/*
 starttime = Math.round(window.performance.now());
 xhr.connect("reqspeed.jpg", "GET", url, aftercontinuousstatic);
 

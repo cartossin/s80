@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>S80</title>
 
 <script src="chart.min.js"></script>
@@ -83,8 +84,8 @@ width:95vw;
 	var total1 = 0;
 	var starttime = 0;
 	var string1 = "";
-	var min = 50000;
-	var max = 0;
+	var minResponseTime = 50000;
+	var maxResponseTime = 0;
 	//var xhr = new XHConn();
 	var results1;
 	//var c = document.getElementById("myCanvas");
@@ -121,7 +122,7 @@ width:95vw;
 				resizeDelay: 100,
 				elements: {
 					point: {
-						radius: 1,
+						radius: 2,
 						borderwidth: 0
 					}
 				},
@@ -215,7 +216,7 @@ function numberToColorHsl(i) {
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
 		s80worker.postMessage(null);
-		setInterval(keepChartUpdated,100);
+		setInterval(keepChartUpdated,5000);
 	}
 
 	function keepChartUpdated(){
@@ -231,15 +232,15 @@ function numberToColorHsl(i) {
 		var afterresults2 = document.getElementById("afterresults2");
 		var realtime1 = document.getElementById("rtping");
 		
-		if(timesample < min)
+		if(timesample < minResponseTime)
 		{
-			min = timesample;
-			afterresults1.innerHTML = "<span style='color:" + colorof(min) +"'>min:"+min+"ms</span> <br><span style='color:" + colorof(max) +"'>"+"max:"+max+"ms</span>";
+			minResponseTime = timesample;
+			afterresults1.innerHTML = "<span style='color:" + colorof(minResponseTime) +"'>min:"+minResponseTime+"ms</span> <br><span style='color:" + colorof(maxResponseTime) +"'>"+"max:"+maxResponseTime+"ms</span>";
 		}
-		if(timesample > max)
+		if(timesample > maxResponseTime)
 		{
-			max = timesample;
-			afterresults1.innerHTML = "<span style='color:" + colorof(min) +"'>min:"+min+"ms</span> <br><span style='color:" + colorof(max) +"'>"+"max:"+max+"ms</span>";
+			maxResponseTime = timesample;
+			afterresults1.innerHTML = "<span style='color:" + colorof(minResponseTime) +"'>min:"+minResponseTime+"ms</span> <br><span style='color:" + colorof(maxResponseTime) +"'>"+"max:"+maxResponseTime+"ms</span>";
 		}
 
 		if(counter1 >= 1000 || paused == true)
