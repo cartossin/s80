@@ -84,8 +84,8 @@ width:95vw;
 	var total1 = 0;
 	var starttime = 0;
 	var string1 = "";
-	var minResponseTime = 50000;
-	var maxResponseTime = 0;
+	var minResponseTime = 50000; //min observed response time. initialized to a high value, so the first response will adjust
+	var maxResponseTime = 0; //max observed response time. initialized to zero, so the first response will adjust
 	//var xhr = new XHConn();
 	var results1;
 	//var c = document.getElementById("myCanvas");
@@ -117,7 +117,10 @@ width:95vw;
             },
             options: {
 				parsing: false,
-				animation: true,
+				animation: {
+					duration: 200,
+					easing: 'easeOutElastic'	
+				},
                 responsive: true,
 				resizeDelay: 100,
 				elements: {
@@ -216,7 +219,7 @@ function numberToColorHsl(i) {
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
 		s80worker.postMessage(null);
-		setInterval(keepChartUpdated,5000);
+		setInterval(keepChartUpdated,100);
 	}
 
 	function keepChartUpdated(){
