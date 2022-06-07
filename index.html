@@ -219,7 +219,7 @@ function numberToColorHsl(i) {
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
 		s80worker.postMessage(null);
-		setInterval(keepChartUpdated,50);
+		setInterval(keepChartUpdated,100);
 	}
 
 	function keepChartUpdated(){
