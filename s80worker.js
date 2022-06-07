@@ -1,4 +1,3 @@
-
 /** XHConn - Simple XMLHTTP Interface - bfults@gmail.com - 2005-04-08        **
  ** Code licensed under Creative Commons Attribution-ShareAlike License      **
  ** http://creativecommons.org/licenses/by-sa/2.0/                           **/
@@ -35,6 +34,7 @@ function XHConn()
           bComplete = true;
           fnDone(xmlhttp);
         }};
+        startTime = performance.now();
       xmlhttp.send(sVars);
     }
     catch(z) { return false; }
@@ -45,7 +45,15 @@ function XHConn()
 
 function measureResponse(myXHR){
     if(myXHR.status == 200){
-        postMessage(Math.ceil(performance.now() - startTime));
+        completeTime = performance.now();
+        if(completeTime - startTime<=0){
+            console.log("error: Impossibly short request (likely caused by Spectre mitigation in your browser reducing timer accuracy)");
+            console.log("completeTime: "+completeTime);
+            console.log("startTime: "+startTime);
+            postMessage(1);
+        }
+        else
+             postMessage(Math.ceil(completeTime - startTime));
     }
     else
     {
@@ -56,22 +64,17 @@ function measureResponse(myXHR){
 }
 //must be delcared outside of onmessage for performance
 let xhr = new XHConn();
-let url;
+let url = "";
 let startTime;
+let completeTime;
 
 onmessage = function(event) {
 //start
  //runs when this worker is called by index.html
   
-    url = "nocache=" + Math.random() ;
-    startTime = performance.now();
+    url = "nocache=" + Math.random();
 
-xhr.connect("reqspeed.jpg", "GET", url, measureResponse);
+    xhr.connect("reqspeed.jpg", "GET", url, measureResponse);
 
 
 }
-/*
-starttime = Math.round(window.performance.now());
-xhr.connect("reqspeed.jpg", "GET", url, aftercontinuousstatic);
-
-*/

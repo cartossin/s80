@@ -81,16 +81,13 @@ width:95vw;
 <script type="text/javascript">
 
 	var counter1 = 0;
+	var animationRunning = false;
 	var total1 = 0;
 	var starttime = 0;
 	var string1 = "";
 	var minResponseTime = 50000;
 	var maxResponseTime = 0;
-	//var xhr = new XHConn();
 	var results1;
-	//var c = document.getElementById("myCanvas");
-	//var ctx = c.getContext("2d");
-//	ctx.font = "10px Arial";
 	var textX = 0;
 	var textY = 10;
 	var paused = false;
@@ -117,7 +114,13 @@ width:95vw;
             },
             options: {
 				parsing: false,
-				animation: true,
+				animation:{
+					easing: 'easeOutElastic',
+					duration: 2000,
+					onComplete: function(animation) {
+						animationRunning = false;
+					}
+				},
                 responsive: true,
 				resizeDelay: 100,
 				elements: {
@@ -216,16 +219,21 @@ function numberToColorHsl(i) {
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
 		s80worker.postMessage(null);
-		setInterval(keepChartUpdated,5000);
+		setInterval(keepChartUpdated,50);
 	}
 
 	function keepChartUpdated(){
-		if(!paused)
+		if(!paused && !animationRunning){
+		//	animationRunning = true;
 			myChart.update();
+		}
 	}
 	
-	function aftercontinuousstatic(workerResponse)
-	{
+	function afterDataPointProcessing(){
+		s80worker.postMessage(null);
+	}
+
+	function aftercontinuousstatic(workerResponse){ // to rename to processDatapoint
 		let timesample = workerResponse.data;
 
 		var afterresults1 = document.getElementById("afterresults1");
@@ -280,16 +288,12 @@ function numberToColorHsl(i) {
 			realtime1.innerHTML = "timeout";
 		}
 	*/
-	s80worker.postMessage(null);
+	afterDataPointProcessing();
 	}
-
-//let resultListColors = [];
-//resultList.forEach((result,i) => {
-//	resultListColors[i] = colorof(result.y);
-//});
 
 
 	continuousstatic();
+
 
 	</script>
 
