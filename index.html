@@ -85,8 +85,14 @@ width:95vw;
 	var total1 = 0;
 	var starttime = 0;
 	var string1 = "";
+<<<<<<< HEAD
 	var minResponseTime = 50000;
 	var maxResponseTime = 0;
+=======
+	var minResponseTime = 50000; //min observed response time. initialized to a high value, so the first response will adjust
+	var maxResponseTime = 0; //max observed response time. initialized to zero, so the first response will adjust
+	//var xhr = new XHConn();
+>>>>>>> d86a4a6654902daa766432f8981ff2800c424ead
 	var results1;
 	var textX = 0;
 	var textY = 10;
@@ -114,12 +120,18 @@ width:95vw;
             },
             options: {
 				parsing: false,
+<<<<<<< HEAD
 				animation:{
 					easing: 'easeOutElastic',
 					duration: 2000,
 					onComplete: function(animation) {
 						animationRunning = false;
 					}
+=======
+				animation: {
+					duration: 200,
+					easing: 'easeOutElastic'	
+>>>>>>> d86a4a6654902daa766432f8981ff2800c424ead
 				},
                 responsive: true,
 				resizeDelay: 100,
@@ -219,7 +231,11 @@ function numberToColorHsl(i) {
 		buttondiv = document.getElementById("buttons");
 		buttondiv.innerHTML = '<button onmouseup="pausetest()">Pause</button>';
 		s80worker.postMessage(null);
+<<<<<<< HEAD
 		setInterval(keepChartUpdated,50);
+=======
+		setInterval(keepChartUpdated,100);
+>>>>>>> d86a4a6654902daa766432f8981ff2800c424ead
 	}
 
 	function keepChartUpdated(){
