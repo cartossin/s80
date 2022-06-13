@@ -74,7 +74,7 @@ onmessage = function(event) {
   
     url = "nocache=" + Math.random();
 
-    xhr.connect("reqspeed.jpg", "GET", url, measureResponse);
+    xhr.connect("16k.jpg", "GET", url, measureResponse);
 
 
 }
