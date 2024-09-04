@@ -20,7 +20,7 @@ function measureResponse(myRes) {
 }
 self.onmessage = function (event) {
     let startTime = performance.now();
-    fetchWithTimeout(`https://s80.us/beta/128k.jpg`)
+    fetchWithTimeout(`reqspeed.jpg`)
         .then(measureResponse)
         .then(endTime => {
             let completeTime = performance.now();
